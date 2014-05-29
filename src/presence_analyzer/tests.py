@@ -70,6 +70,11 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
             [u'Fri', 0],
             [u'Sat', 0],
             [u'Sun', 0]])
+        resp = self.client.get('/api/v1/mean_time_weekday/1')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+        data = json.loads(resp.data)
+        self.assertEqual(len(data), 0)
 
     def test_api_presence_weekday(self):
         """
@@ -89,6 +94,11 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
             [u'Fri', 0],
             [u'Sat', 0],
             [u'Sun', 0]])
+        resp = self.client.get('/api/v1/presence_weekday/1')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+        data = json.loads(resp.data)
+        self.assertEqual(len(data), 0)
 
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
