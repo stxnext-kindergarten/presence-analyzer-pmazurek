@@ -6,8 +6,9 @@ import os.path
 import json
 import datetime
 import unittest
+from lxml import html
 
-from presence_analyzer import main, views, utils
+from presence_analyzer import main, utils
 
 
 TEST_DATA_CSV = os.path.join(
@@ -118,6 +119,39 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
             [u'Sat', 0, 0],
             [u'Sun', 0, 0]])
 
+    def test_presence_weekday_view(self):
+        """
+        Test presence weekday view.
+        """
+        resp = self.client.get('/presence_weekday.html')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'text/html; charset=utf-8')
+        source = html.fromstring(resp.data)
+        text = source.xpath('//li[@id="selected"]/a')[0].text
+        self.assertEqual(text, 'Presence by weekday')
+
+    def test_presence_mean_view(self):
+        """
+        Test presence mean view.
+        """
+        resp = self.client.get('/presence_mean_time.html')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'text/html; charset=utf-8')
+        source = html.fromstring(resp.data)
+        text = source.xpath('//li[@id="selected"]/a')[0].text
+        self.assertEqual(text, 'Presence mean time')
+
+    def test_presence_start_end_view(self):
+        """
+        Test presence arrival/leave view.
+        """
+        resp = self.client.get('/presence_start_end.html')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'text/html; charset=utf-8')
+        source = html.fromstring(resp.data)
+        text = source.xpath('//li[@id="selected"]/a')[0].text
+        self.assertEqual(text, 'Presence start-end')
+
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     """
@@ -214,10 +248,10 @@ def suite():
     """
     Default test suite.
     """
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(PresenceAnalyzerViewsTestCase))
-    suite.addTest(unittest.makeSuite(PresenceAnalyzerUtilsTestCase))
-    return suite
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(unittest.makeSuite(PresenceAnalyzerViewsTestCase))
+    test_suite.addTest(unittest.makeSuite(PresenceAnalyzerUtilsTestCase))
+    return test_suite
 
 
 if __name__ == '__main__':

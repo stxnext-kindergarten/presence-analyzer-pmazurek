@@ -27,6 +27,8 @@ setup(
     install_requires=[
         'setuptools',
         'Flask',
+        'Flask-Mako',
+        'lxml',
     ],
     entry_points="""
     [console_scripts]
