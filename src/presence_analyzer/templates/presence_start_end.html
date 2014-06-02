@@ -4,7 +4,7 @@
 <%inherit file="base.html" />
 
 <%block name="scripts">
-<script src="/static/js/scripts.js"></script>
+<script src="${url_for('static', filename='js/scripts.js')}"></script>
 <script type="text/javascript">
     google.load("visualization", "1", {packages:["corechart", "timeline"], 'language': 'pl'});
 </script>
