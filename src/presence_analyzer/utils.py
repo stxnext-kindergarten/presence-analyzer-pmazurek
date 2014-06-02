@@ -22,6 +22,9 @@ def jsonify(function):
     """
     @wraps(function)
     def inner(*args, **kwargs):
+        """
+        Wrapper function for returning json data type.
+        """
         return Response(dumps(function(*args, **kwargs)),
                         mimetype='application/json')
     return inner
