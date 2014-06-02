@@ -3,12 +3,8 @@
 # pylint:skip-file
 
 import os
-import sys
 import urllib
 from functools import partial
-
-import paste.script.command
-import werkzeug.script
 
 etc = partial(os.path.join, 'parts', 'etc')
 
