@@ -4,8 +4,7 @@
 <%inherit file="base.html" />
 
 <%block name="scripts">
-    <script src="/static/js/jquery.min.js"></script>
-    <script src="/static/js/scripts.js"></script>
+    <script src="${url_for('static', filename='js/scripts.js')}"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
         google.load("visualization", "1", {packages:["corechart"], 'language': 'pl'});
@@ -16,7 +15,7 @@
         (function($) {
             $(document).ready(function(){
                 var loading = $('#loading');
-                $.getJSON("/api/v1/users", function(result) {
+                $.getJSON("${url_for('users_view')}", function(result) {
                     var dropdown = $("#user_id");
                     $.each(result, function(item) {
                         dropdown.append($("<option />").val(this.user_id).text(this.name));
