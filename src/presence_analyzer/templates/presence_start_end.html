@@ -15,7 +15,7 @@
                 $.getJSON("${url_for('users_view')}", function(result) {
                     var dropdown = $("#user_id");
                     $.each(result, function(item) {
-                        dropdown.append($("<option />").val(this.user_id).text(this.name));
+                        dropdown.append($("<option />").val(this.user_id).text(this.name).attr('data-avatar', this.avatar));
                     });
                     dropdown.show();
                     loading.hide();
@@ -23,6 +23,9 @@
                 $('#user_id').change(function(){
                     var selected_user = $("#user_id").val();
                     var chart_div = $('#chart_div');
+                    var avatar = $('#user_id option:selected').data('avatar')
+                    var img = $(new Image()).attr('src', avatar);
+                    $('#avatar').html(img);
                     if(selected_user) {
                         loading.show();
                         chart_div.hide();
@@ -62,6 +65,7 @@
     <select id="user_id" style="display: none">
         <option value="">--</option>
     </select>
+    <div id="avatar"></div>
     <div id="chart_div" style="display: none">
     </div>
     <div id="loading">
