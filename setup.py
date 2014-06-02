@@ -28,6 +28,7 @@ setup(
         'setuptools',
         'Flask',
         'Flask-Mako',
+        'lxml',
     ],
     entry_points="""
     [console_scripts]

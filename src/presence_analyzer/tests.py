@@ -6,6 +6,7 @@ import os.path
 import json
 import datetime
 import unittest
+from lxml import html
 
 from presence_analyzer import main, utils
 
@@ -125,6 +126,9 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         resp = self.client.get('/presence_weekday.html')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'text/html; charset=utf-8')
+        source = html.fromstring(resp.data)
+        text = source.xpath('//li[@id="selected"]/a')[0].text
+        self.assertEqual(text, 'Presence by weekday')
 
     def test_presence_mean_view(self):
         """
@@ -133,6 +137,9 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         resp = self.client.get('/presence_mean_time.html')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'text/html; charset=utf-8')
+        source = html.fromstring(resp.data)
+        text = source.xpath('//li[@id="selected"]/a')[0].text
+        self.assertEqual(text, 'Presence mean time')
 
     def test_presence_start_end_view(self):
         """
@@ -141,6 +148,9 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         resp = self.client.get('/presence_start_end.html')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, 'text/html; charset=utf-8')
+        source = html.fromstring(resp.data)
+        text = source.xpath('//li[@id="selected"]/a')[0].text
+        self.assertEqual(text, 'Presence start-end')
 
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
