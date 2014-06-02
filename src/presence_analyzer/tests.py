@@ -169,7 +169,8 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
             3: {'start': 38926, 'end': 62631},
             4: {'start': 0, 'end': 0},
             5: {'start': 0, 'end': 0},
-            6: {'start': 0, 'end': 0}}
+            6: {'start': 0, 'end': 0},
+        }
         grouped_data = utils.group_by_weekday_start_end(data[10])
         self.assertDictEqual(grouped_data, test)
 
