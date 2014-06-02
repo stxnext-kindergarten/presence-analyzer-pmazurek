@@ -4,9 +4,11 @@ Helper functions used in views.
 """
 
 import csv
+import os
 from json import dumps
 from functools import wraps
 from datetime import datetime
+from lxml import etree
 
 from flask import Response
 
@@ -128,3 +130,21 @@ def mean(items):
     Calculates arithmetic mean. Returns zero for empty lists.
     """
     return float(sum(items)) / len(items) if len(items) > 0 else 0
+
+
+def get_user_additional_data():
+    """
+    Gets user data from XML.
+    """
+    filename = os.path.join(os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'users.xml')
+    users = {}
+    with open(filename, 'r') as xmlfile:
+        xml = etree.parse(xmlfile)
+        intranet = xml.getroot()
+        server = intranet[0]
+        server_url = "%s://%s:%s" % (server[2].text, server[0].text, server[1].text)
+        for xml_user in intranet[1]:
+            user = {'name': xml_user[1].text, "url": server_url + xml_user[0].text}
+            users[xml_user.get("id")] = user
+
+        return users
