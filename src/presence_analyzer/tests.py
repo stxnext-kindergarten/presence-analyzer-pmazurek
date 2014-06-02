@@ -100,6 +100,24 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         data = json.loads(resp.data)
         self.assertEqual(len(data), 0)
 
+    def test_api_mean_start_end(self):
+        """
+        Test if mean arrival/leave data are correctly returned by API.
+        """
+        resp = self.client.get('/api/v1/presence_start_end/10')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, 'application/json')
+        data = json.loads(resp.data)
+        self.assertEqual(len(data), 7)
+        self.assertEqual(data, [
+            [u'Mon', 0, 0],
+            [u'Tue', 34745, 64792],
+            [u'Wed', 33592, 58057],
+            [u'Thu', 38926, 62631],
+            [u'Fri', 0, 0],
+            [u'Sat', 0, 0],
+            [u'Sun', 0, 0]])
+
 
 class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
     """
@@ -136,8 +154,25 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         Test if function correctly groups by weekdays.
         """
         data = utils.get_data()
-        dict = {0: [], 1: [30047], 2: [24465], 3: [23705], 4: [], 5: [], 6: []}
-        self.assertDictEqual(utils.group_by_weekday(data[10]), dict)
+        test = {0: [], 1: [30047], 2: [24465], 3: [23705], 4: [], 5: [], 6: []}
+        self.assertDictEqual(utils.group_by_weekday(data[10]), test)
+
+    def test_group_by_start_end(self):
+        """
+        Test grouping by mean arrival/leave hours.
+        """
+        data = utils.get_data()
+        test = {
+            0: {'start': 0, 'end': 0},
+            1: {'start': 34745, 'end': 64792},
+            2: {'start': 33592, 'end': 58057},
+            3: {'start': 38926, 'end': 62631},
+            4: {'start': 0, 'end': 0},
+            5: {'start': 0, 'end': 0},
+            6: {'start': 0, 'end': 0},
+        }
+        grouped_data = utils.group_by_weekday_start_end(data[10])
+        self.assertDictEqual(grouped_data, test)
 
     def test_seconds_since_midnight(self):
         """

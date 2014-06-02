@@ -13,7 +13,7 @@ from flask import Response
 from presence_analyzer.main import app
 
 import logging
-log = logging.getLogger(__name__)  # pylint: disable-msg=C0103
+log = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
 def jsonify(function):
@@ -75,6 +75,34 @@ def group_by_weekday(items):
         start = items[date]['start']
         end = items[date]['end']
         result[date.weekday()].append(interval(start, end))
+    return result
+
+
+def group_by_weekday_start_end(items):
+    """
+    Groups presence entries by arrival/leave hour for each weekday.
+    """
+    result = {i: {'start': 0, 'end': 0, 'items': 0} for i in range(7)}
+    for date in items:
+        start = items[date]['start']
+        end = items[date]['end']
+        result[date.weekday()]['start'] += seconds_since_midnight(start)
+        result[date.weekday()]['end'] += seconds_since_midnight(end)
+        result[date.weekday()]['items'] += 1
+
+    for day in result.values():
+        try:
+            day['start'] = day['start'] / day['items']
+        except ZeroDivisionError:
+            pass
+
+        try:
+            day['end'] = day['end'] / day['items']
+        except ZeroDivisionError:
+            pass
+
+        del day['items']
+
     return result
 
 
