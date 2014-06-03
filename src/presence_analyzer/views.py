@@ -69,8 +69,7 @@ def users_view():
         }
         for i in data.keys() if str(i) in additional_data
     ]
-    result = sorted(result, key=lambda x: x["name"])
-    return result
+    return sorted(result, key=lambda x: x["name"])
 
 
 @app.route('/api/v1/mean_time_weekday/', methods=['GET'])
