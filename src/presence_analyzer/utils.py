@@ -27,17 +27,17 @@ def cache(timeout=600):
         def inner(*args, **kwargs):
             mc = memcache.Client([app.config['CACHE_SERVER']], debug=0)
             lock = Lock()
-            lock.acquire()
-            cached = mc.get("user_data" + app.config['CACHE_APP_KEY'])
 
-            if cached:
-                result = cached
-            else:
-                result = function(*args, **kwargs)
-                key = "user_data" + app.config['CACHE_APP_KEY']
-                mc.set(key, result, time=timeout)
+            with lock:
+                cached = mc.get("user_data" + app.config['CACHE_APP_KEY'])
 
-            lock.release()
+                if cached:
+                    result = cached
+                else:
+                    result = function(*args, **kwargs)
+                    key = "user_data" + app.config['CACHE_APP_KEY']
+                    mc.set(key, result, time=timeout)
+
             return result
         return inner
     return decorator
