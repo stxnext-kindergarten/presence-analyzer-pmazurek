@@ -177,7 +177,7 @@ def get_user_additional_data():
             user = {
                 'name': xml_user.find('name').text,
                 'url': server_url + xml_user.find('avatar').text,
-                }
+            }
             users[xml_user.get('id')] = user
 
         return users
