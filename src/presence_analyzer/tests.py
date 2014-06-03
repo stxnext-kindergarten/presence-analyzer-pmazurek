@@ -56,7 +56,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
         self.assertEqual(len(data), 2)
-        self.assertDictEqual(data[0], {
+        self.assertDictEqual(data[1], {
             u'user_id': 10,
             u'name': u'Maciej Z.',
             u'avatar': 'https://intranet.stxnext.pl:443/api/images/users/10',
