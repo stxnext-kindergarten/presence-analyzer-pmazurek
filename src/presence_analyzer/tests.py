@@ -14,6 +14,9 @@ from presence_analyzer import main, utils
 TEST_DATA_CSV = os.path.join(
     os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_data.csv'
 )
+TEST_DATA_XML = os.path.join(
+    os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_users.xml'
+)
 
 
 # pylint: disable=E1103
@@ -27,6 +30,7 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         Before each test, set up a environment.
         """
         main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
+        main.app.config.update({'DATA_XML': TEST_DATA_XML})
         self.client = main.app.test_client()
 
     def tearDown(self):
@@ -52,7 +56,11 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         self.assertEqual(resp.content_type, 'application/json')
         data = json.loads(resp.data)
         self.assertEqual(len(data), 2)
-        self.assertDictEqual(data[0], {u'user_id': 10, u'name': u'User 10'})
+        self.assertDictEqual(data[0], {
+            u'user_id': 10,
+            u'name': u'Maciej Z.',
+            u'avatar': 'https://intranet.stxnext.pl:443/api/images/users/10',
+        })
 
     def test_api_mean_time_weekday(self):
         """
@@ -163,6 +171,7 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         Before each test, set up a environment.
         """
         main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
+        main.app.config.update({'DATA_XML': TEST_DATA_XML})
 
     def tearDown(self):
         """
@@ -242,6 +251,20 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         self.assertEqual(utils.mean(range(1, 10)), 5.)
         self.assertEqual(utils.mean(range(5, 11)), 7.5)
         self.assertIsInstance(utils.mean([0]), float)
+
+    def test_get_additional_data(self):
+        data = utils.get_user_additional_data()
+        test = {
+            '11': {
+                'url': 'https://intranet.stxnext.pl:443/api/images/users/11',
+                'name': 'Maciej D.',
+                },
+            '10': {
+                'url': 'https://intranet.stxnext.pl:443/api/images/users/10',
+                'name': 'Maciej Z.',
+                }
+            }
+        self.assertDictEqual(data, test)
 
 
 def suite():
