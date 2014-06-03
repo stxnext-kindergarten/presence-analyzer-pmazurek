@@ -61,12 +61,14 @@ def users_view():
     data = get_data()
     additional_data = get_user_additional_data()
 
-    return [{
-        'user_id': i,
-        'name': additional_data[str(i)]["name"],
-        'avatar': additional_data[str(i)]["url"]
+    return [
+        {
+            'user_id': i,
+            'name': additional_data[str(i)]["name"],
+            'avatar': additional_data[str(i)]["url"],
         }
-        for i in data.keys() if str(i) in additional_data]
+        for i in data.keys() if str(i) in additional_data
+    ]
 
 
 @app.route('/api/v1/mean_time_weekday/', methods=['GET'])

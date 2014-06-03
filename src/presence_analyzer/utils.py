@@ -141,16 +141,16 @@ def get_user_additional_data():
     with open(filename, 'r') as xmlfile:
         xml = etree.parse(xmlfile)
         intranet = xml.getroot()
-        server = intranet[0]
-        server_url = "%s://%s:%s" % (
-            server[2].text,
-            server[0].text,
-            server[1].text)
-        for xml_user in intranet[1]:
+        server = intranet.find('server')
+        server_url = '{0}://{1}:{2}'.format(
+            server.find('protocol').text,
+            server.find('host').text,
+            server.find('port').text)
+        for xml_user in intranet.find('users'):
             user = {
-                'name': xml_user[1].text,
-                "url": server_url + xml_user[0].text,
+                'name': xml_user.find('name').text,
+                'url': server_url + xml_user.find('avatar').text,
                 }
-            users[xml_user.get("id")] = user
+            users[xml_user.get('id')] = user
 
         return users
