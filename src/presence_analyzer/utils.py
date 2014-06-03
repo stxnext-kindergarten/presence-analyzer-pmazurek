@@ -171,7 +171,8 @@ def get_user_additional_data():
         server_url = '{0}://{1}:{2}'.format(
             server.find('protocol').text,
             server.find('host').text,
-            server.find('port').text)
+            server.find('port').text,
+        )
         for xml_user in intranet.find('users'):
             user = {
                 'name': xml_user.find('name').text,
