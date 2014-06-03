@@ -17,6 +17,8 @@ TEST_DATA_CSV = os.path.join(
 TEST_DATA_XML = os.path.join(
     os.path.dirname(__file__), '..', '..', 'runtime', 'data', 'test_users.xml'
 )
+TEST_CACHE_SERVER = '127.0.0.1:11211'
+TEST_CACHE_APP_KEY = '_presence_analyzer_testing'
 
 
 # pylint: disable=E1103
@@ -31,6 +33,8 @@ class PresenceAnalyzerViewsTestCase(unittest.TestCase):
         """
         main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
         main.app.config.update({'DATA_XML': TEST_DATA_XML})
+        main.app.config.update({'CACHE_APP_KEY': TEST_CACHE_APP_KEY})
+        main.app.config.update({'CACHE_SERVER': TEST_CACHE_SERVER})
         self.client = main.app.test_client()
 
     def tearDown(self):
@@ -172,6 +176,8 @@ class PresenceAnalyzerUtilsTestCase(unittest.TestCase):
         """
         main.app.config.update({'DATA_CSV': TEST_DATA_CSV})
         main.app.config.update({'DATA_XML': TEST_DATA_XML})
+        main.app.config.update({'CACHE_APP_KEY': TEST_CACHE_APP_KEY})
+        main.app.config.update({'CACHE_SERVER': TEST_CACHE_SERVER})
 
     def tearDown(self):
         """

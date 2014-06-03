@@ -29,6 +29,7 @@ setup(
         'Flask',
         'Flask-Mako',
         'lxml',
+        'python-memcached',
     ],
     entry_points="""
     [console_scripts]
