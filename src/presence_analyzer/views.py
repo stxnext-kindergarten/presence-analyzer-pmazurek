@@ -19,6 +19,8 @@ from presence_analyzer.utils import (
 import logging
 log = logging.getLogger(__name__)  # pylint: disable=C0103
 
+import locale
+locale.setlocale(locale.LC_COLLATE, "")
 
 @app.route('/')
 def mainpage():
@@ -69,7 +71,7 @@ def users_view():
         }
         for i in data.keys() if str(i) in additional_data
     ]
-    return sorted(result, key=lambda x: x["name"])
+    return sorted(result, key=lambda x: x["name"], cmp=locale.strcoll)
 
 
 @app.route('/api/v1/mean_time_weekday/', methods=['GET'])
