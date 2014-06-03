@@ -22,6 +22,7 @@ log = logging.getLogger(__name__)  # pylint: disable=C0103
 import locale
 locale.setlocale(locale.LC_COLLATE, "")
 
+
 @app.route('/')
 def mainpage():
     """
