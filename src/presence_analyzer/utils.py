@@ -17,7 +17,7 @@ from threading import Lock
 import memcache
 import logging
 log = logging.getLogger(__name__)  # pylint: disable=C0103
-mc = ""
+mc = None
 
 
 def cache(timeout=600):
