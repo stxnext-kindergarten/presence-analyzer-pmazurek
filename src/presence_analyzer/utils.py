@@ -19,12 +19,13 @@ import logging
 log = logging.getLogger(__name__)  # pylint: disable=C0103
 mc = ""
 
+
 def cache(timeout=600):
-    def decorator(function):
-        """
+    """
         Caches data in memory.
-        """
-        def inner(*args, **kwargs):
+    """
+    def decorator(function):  # pylint: disable=C0111
+        def inner(*args, **kwargs):  # pylint: disable=C0111
             global mc
             if not mc:
                 mc = memcache.Client([app.config['CACHE_SERVER']], debug=0)
