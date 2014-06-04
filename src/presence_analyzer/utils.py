@@ -22,7 +22,7 @@ mc = ""
 
 def cache(timeout=600):
     """
-        Caches data in memory.
+    Caches data in memory.
     """
     def decorator(function):  # pylint: disable=C0111
         def inner(*args, **kwargs):  # pylint: disable=C0111
