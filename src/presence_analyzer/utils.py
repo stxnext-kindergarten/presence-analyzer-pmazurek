@@ -17,7 +17,8 @@ from threading import Lock
 import memcache
 import logging
 log = logging.getLogger(__name__)  # pylint: disable=C0103
-mc = None
+mc = None  # pylint: disable=C0103
+lock = Lock()  # pylint: disable=C0103
 
 
 def cache(timeout=600):
@@ -27,9 +28,8 @@ def cache(timeout=600):
     def decorator(function):  # pylint: disable=C0111
         def inner(*args, **kwargs):  # pylint: disable=C0111
             global mc
-            if not mc:
+            if mc is None:
                 mc = memcache.Client([app.config['CACHE_SERVER']], debug=0)
-            lock = Lock()
 
             with lock:
                 cached = mc.get("user_data" + app.config['CACHE_APP_KEY'])
