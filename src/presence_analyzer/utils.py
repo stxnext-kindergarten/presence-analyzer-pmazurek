@@ -13,9 +13,37 @@ from lxml import etree
 from flask import Response
 
 from presence_analyzer.main import app
-
+from threading import Lock
+import memcache
 import logging
 log = logging.getLogger(__name__)  # pylint: disable=C0103
+mc = None  # pylint: disable=C0103
+lock = Lock()  # pylint: disable=C0103
+
+
+def cache(timeout=600):
+    """
+    Caches data in memory.
+    """
+    def decorator(function):  # pylint: disable=C0111
+        def inner(*args, **kwargs):  # pylint: disable=C0111
+            global mc
+            if mc is None:
+                mc = memcache.Client([app.config['CACHE_SERVER']], debug=0)
+
+            with lock:
+                cached = mc.get("user_data" + app.config['CACHE_APP_KEY'])
+
+                if cached:
+                    result = cached
+                else:
+                    result = function(*args, **kwargs)
+                    key = "user_data" + app.config['CACHE_APP_KEY']
+                    mc.set(key, result, time=timeout)
+
+            return result
+        return inner
+    return decorator
 
 
 def jsonify(function):
@@ -32,6 +60,7 @@ def jsonify(function):
     return inner
 
 
+@cache(500)
 def get_data():
     """
     Extracts presence data from CSV file and groups it by user_id.
@@ -145,12 +174,13 @@ def get_user_additional_data():
         server_url = '{0}://{1}:{2}'.format(
             server.find('protocol').text,
             server.find('host').text,
-            server.find('port').text)
+            server.find('port').text,
+        )
         for xml_user in intranet.find('users'):
             user = {
                 'name': xml_user.find('name').text,
                 'url': server_url + xml_user.find('avatar').text,
-                }
+            }
             users[xml_user.get('id')] = user
 
         return users
